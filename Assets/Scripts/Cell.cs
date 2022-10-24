@@ -61,7 +61,7 @@ public class Cell : MonoBehaviour
     void Start()
     {
         self.transform.position = new Vector3(position_x, position_y, 0);
-        print(self.transform.position);
+        //print(self.transform.position);
     }
 
     // Update is called once per frame
