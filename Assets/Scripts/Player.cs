@@ -9,13 +9,17 @@ public class Player : MonoBehaviour
     public int num_gas_masks;
 
     // Start is called before the first frame update
-    void Start(float start_position_x, float start_position_y, int gas_masks)
+    void __init__(float start_position_x, float start_position_y, int gas_masks)
     {
         position_x = start_position_x;
         position_y = start_position_y;
         num_gas_masks = gas_masks;
     }
 
+    void Start()
+    {
+
+    }
     // Update is called once per frame
     void Update()
     {
