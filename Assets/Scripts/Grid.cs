@@ -9,6 +9,7 @@ public class Grid : MonoBehaviour
     private int height;
     private float tileSize;
     private Cell[,] grid;
+    public GameObject self;
     
     public Grid()
     {
@@ -34,12 +35,13 @@ public class Grid : MonoBehaviour
 
     void Start()
     {
+        self = GameObject.Find("Grid");
         for(int x = 0; x < width; x++)
         {
             for(int y = 0; y < height; y++)
             {
                 //grid[x, y] = new Cell(Cell.CellStatus.Free, x, y, tileSize);
-                grid[x, y] = gameObject.AddComponent(typeof(Cell)) as Cell;
+                grid[x, y] = self.AddComponent(typeof(Cell)) as Cell;
                 grid[x, y].init_cell(Cell.CellStatus.Free, x, y, tileSize);
             }
         }

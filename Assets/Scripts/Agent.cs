@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Agent : MonoBehaviour
 {
     public float position_x;
     public float position_y;
