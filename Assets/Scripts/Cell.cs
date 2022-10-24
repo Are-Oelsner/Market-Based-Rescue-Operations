@@ -12,10 +12,14 @@ public class Cell : MonoBehaviour
         Goal
     }
     public CellStatus status;
+    public float position_x;
+    public float position_y;
     // Start is called before the first frame update
-    void __init__(CellStatus init_status)
+    void __init__(CellStatus init_status, float start_x, float start_y)
     {
         status = init_status;
+        position_x = start_x;
+        position_y = start_y;  
     }
 
     CellStatus getStatus()
