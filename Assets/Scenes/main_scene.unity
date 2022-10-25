@@ -543,7 +543,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 7
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -674,6 +674,7 @@ MonoBehaviour:
   position_x: 0
   position_y: 0
   num_gas_masks: 0
+  goal_pos: {x: 0, y: 0, z: 0}
 --- !u!1 &935702147
 GameObject:
   m_ObjectHideFlags: 0
@@ -837,7 +838,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 395f6b9556f14704790df6035be6ee3a, type: 3}
-  m_Color: {r: 0.036042754, g: 0.5471698, b: 0, a: 1}
+  m_Color: {r: 0, g: 1, b: 0.20784314, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1015,7 +1016,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 395f6b9556f14704790df6035be6ee3a, type: 3}
-  m_Color: {r: 0.036042754, g: 0.5471698, b: 0, a: 1}
+  m_Color: {r: 0, g: 1, b: 0.20784314, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1119,6 +1120,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1895657276}
   - component: {fileID: 1895657275}
+  - component: {fileID: 1895657277}
   m_Layer: 0
   m_Name: Agent (1)
   m_TagString: Untagged
@@ -1193,6 +1195,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1895657277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1895657274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f15fc4ea3bd69c44cbda42a3ae67f5ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  position_x: 0
+  position_y: 0
+  num_gas_masks: 0
+  goal_pos: {x: 0, y: 0, z: 0}
 --- !u!1 &1909281060
 GameObject:
   m_ObjectHideFlags: 0
