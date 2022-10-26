@@ -13,8 +13,6 @@ public class Agent : MonoBehaviour
     private float[] dists;
     private Vector3 goal_pos;
 
-    public Vector3 goal_pos;
-
     void Start()
     {
         InvokeRepeating("Path_Nav", 15.0f, 1.0f);
@@ -34,7 +32,6 @@ public class Agent : MonoBehaviour
     // Update is called once per frame
     void Path_Nav()
     {
-        Vector3 goal_pos = GameObject.Find(goal).transform.position; 
         
         if(Vector3.Distance(goal_pos, transform.position) < 0.5f)
         {
