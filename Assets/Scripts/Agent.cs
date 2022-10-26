@@ -7,6 +7,11 @@ public class Agent : MonoBehaviour
     public float position_x;
     public float position_y;
     public int num_gas_masks;
+    public string goal = "Goal 1";
+
+    // Storing helper variables so we don't need to reallocate space for them everytime Path_Nav is called
+    private float[] dists;
+    private Vector3 goal_pos;
 
     void Start()
     {
@@ -16,7 +21,7 @@ public class Agent : MonoBehaviour
     // Update is called once per frame
     void Path_Nav()
     {
-        Vector3 goal_pos = GameObject.Find("Agent (1)").transform.position; 
+        Vector3 goal_pos = GameObject.Find(goal).transform.position; 
 
         if(Vector3.Distance(goal_pos, transform.position) < 0.5f)
         {
@@ -24,7 +29,16 @@ public class Agent : MonoBehaviour
         }
 
         Vector3[] transforms = {new Vector3(1,0,0) + transform.position, new Vector3(-1,0,0) + transform.position, new Vector3(0,1,0) + transform.position, new Vector3(0,-1,0) + transform.position};
-        float[] dists = new float[4];
+        // TODO collision checking
+        for(int i = 0; i < transforms.Length; i++)
+        {
+            // If transforms[i]'s node is occupied
+            // Remove it from consideration
+            // Need to find an efficient way to check for obstacles in an area repeatedly. 
+                // Can have all obstacles set up with colliders and then have four square bounding boxes, one on each side of each agent, and then check for collisions.
+                // Can potentially keep the same four bounding boxes and move them as the agent moves
+        }
+        dists = new float[4];
 
         for(int i = 0; i < 4; i++)
         {

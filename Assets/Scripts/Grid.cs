@@ -8,8 +8,9 @@ public class Grid : MonoBehaviour
     private int width;
     private int height;
     private float tileSize;
-    private Cell[,] grid;
+    public Cell[,] grid;
     public GameObject self;
+    public Sprite cell_sprite;
     
     public Grid()
     {
@@ -24,12 +25,13 @@ public class Grid : MonoBehaviour
         tileSize = init_tilesize;
     }
 
-    public void init_grid(int init_width, int init_height, float init_tilesize = 1)
+    public void init_grid(int init_width, int init_height, Sprite init_cell_sprite, float init_tilesize = 1)
     {
         width = init_width;
         height = init_height;  
         grid = new Cell[width,height];
         tileSize = init_tilesize;
+        cell_sprite = init_cell_sprite;
 
     }
 
@@ -42,7 +44,7 @@ public class Grid : MonoBehaviour
             {
                 //grid[x, y] = new Cell(Cell.CellStatus.Free, x, y, tileSize);
                 grid[x, y] = self.AddComponent(typeof(Cell)) as Cell;
-                grid[x, y].init_cell(Cell.CellStatus.Free, x, y, tileSize);
+                grid[x, y].init_cell(Cell.CellStatus.Free, x, y, cell_sprite, tileSize);
             }
         }
 
@@ -57,6 +59,16 @@ public class Grid : MonoBehaviour
                 grid[x, y].drawCell();
             }
         }
+    }
+
+    Vector2 Pos_To_Coords(float xpos, float ypos)
+    {
+        return new Vector2((int)xpos / tileSize, (int)ypos / tileSize);
+    }
+    bool Is_Occupied(float xpos, float ypos)
+    {
+        Vector2 cell = Pos_To_Coords(xpos, ypos);
+        return grid[(int)cell.x, (int)cell.y].status != Cell.CellStatus.Obstacle;
     }
 
     // Update is called once per frame
