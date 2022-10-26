@@ -13,16 +13,29 @@ public class Agent : MonoBehaviour
     private float[] dists;
     private Vector3 goal_pos;
 
+    public Vector3 goal_pos;
+
     void Start()
     {
-        InvokeRepeating("Path_Nav", 2.0f, 1.0f);
+        InvokeRepeating("Path_Nav", 15.0f, 1.0f);
+        Vector3 surv1_pos = GameObject.Find("Circle").transform.position; 
+        Vector3 surv2_pos = GameObject.Find("Circle (1)").transform.position;
+
+        if(Vector3.Distance(surv1_pos, transform.position) > Vector3.Distance(surv2_pos, transform.position))
+        {
+            goal_pos = surv1_pos;
+        }
+        else
+        {
+            goal_pos = surv2_pos;
+        }
     }
 
     // Update is called once per frame
     void Path_Nav()
     {
         Vector3 goal_pos = GameObject.Find(goal).transform.position; 
-
+        
         if(Vector3.Distance(goal_pos, transform.position) < 0.5f)
         {
             return;

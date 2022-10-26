@@ -417,7 +417,7 @@ GameObject:
   - component: {fileID: 494709378}
   - component: {fileID: 494709379}
   m_Layer: 0
-  m_Name: Obstacle 2
+  m_Name: Obstacle 1 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -543,7 +543,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 7
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -566,13 +566,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10.5, y: 0, z: -10}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 935702148}
-  m_RootOrder: 9
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &800765293
 GameObject:
@@ -586,7 +586,7 @@ GameObject:
   - component: {fileID: 800765297}
   - component: {fileID: 800765298}
   m_Layer: 0
-  m_Name: Agent 1
+  m_Name: Agent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -600,12 +600,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 800765293}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.77, y: 5.85, z: 0}
+  m_LocalPosition: {x: -3.5, y: -2.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 962655779}
-  m_RootOrder: 1
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &800765297
 SpriteRenderer:
@@ -668,13 +668,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 800765293}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a068f3577665564e8a91a732b71ab99, type: 3}
+  m_Script: {fileID: 11500000, guid: f15fc4ea3bd69c44cbda42a3ae67f5ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   position_x: 0
   position_y: 0
   num_gas_masks: 0
-  goal: Goal 1
+  goal_pos: {x: 0, y: 0, z: 0}
 --- !u!1 &935702147
 GameObject:
   m_ObjectHideFlags: 0
@@ -699,7 +699,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 935702147}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 0, z: 0}
+  m_LocalPosition: {x: 10.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -712,10 +712,8 @@ Transform:
   - {fileID: 1779352681}
   - {fileID: 111385724}
   - {fileID: 494709378}
-  - {fileID: 519420032}
-  - {fileID: 1413977804}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &962655777
 GameObject:
@@ -750,7 +748,6 @@ MonoBehaviour:
   self: {fileID: 0}
   agents: []
   num_agents: 2
-  cell_sprite: {fileID: 7482667652216324306, guid: 33141c4179808ab4aa69b4cea9c59ec2, type: 3}
 --- !u!4 &962655779
 Transform:
   m_ObjectHideFlags: 0
@@ -758,16 +755,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 962655777}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -11.97, y: -9.5, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 10.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 268535302}
-  - {fileID: 800765294}
-  - {fileID: 1895657276}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1256289484
 GameObject:
@@ -780,7 +775,7 @@ GameObject:
   - component: {fileID: 1256289485}
   - component: {fileID: 1256289488}
   m_Layer: 0
-  m_Name: Goal 1
+  m_Name: Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -843,7 +838,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 395f6b9556f14704790df6035be6ee3a, type: 3}
-  m_Color: {r: 0.036042754, g: 0.5471698, b: 0, a: 1}
+  m_Color: {r: 0, g: 1, b: 0.20784314, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -939,13 +934,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1413977802}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10.5, y: 0, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 935702148}
-  m_RootOrder: 10
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1779352680
 GameObject:
@@ -958,7 +953,7 @@ GameObject:
   - component: {fileID: 1779352681}
   - component: {fileID: 1779352682}
   m_Layer: 0
-  m_Name: Goal 2
+  m_Name: Circle (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1021,7 +1016,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 395f6b9556f14704790df6035be6ee3a, type: 3}
-  m_Color: {r: 0.036042754, g: 0.5471698, b: 0, a: 1}
+  m_Color: {r: 0, g: 1, b: 0.20784314, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1127,7 +1122,7 @@ GameObject:
   - component: {fileID: 1895657275}
   - component: {fileID: 1895657277}
   m_Layer: 0
-  m_Name: Agent 2
+  m_Name: Agent (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1174,7 +1169,7 @@ SpriteRenderer:
   m_SortingLayerID: 2033819727
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
+  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 0, g: 0.3433173, b: 0.8490566, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1192,12 +1187,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1895657274}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.83, y: 7.07, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 7.5, y: 2.15, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 962655779}
+  m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1895657277
@@ -1209,13 +1204,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1895657274}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a068f3577665564e8a91a732b71ab99, type: 3}
+  m_Script: {fileID: 11500000, guid: f15fc4ea3bd69c44cbda42a3ae67f5ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   position_x: 0
   position_y: 0
   num_gas_masks: 0
-  goal: Goal 2
+  goal_pos: {x: 0, y: 0, z: 0}
 --- !u!1 &1909281060
 GameObject:
   m_ObjectHideFlags: 0
