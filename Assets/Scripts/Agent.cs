@@ -15,7 +15,7 @@ public class Agent : MonoBehaviour
 
     void Start()
     {
-        InvokeRepeating("Path_Nav", 15.0f, 1.0f);
+        InvokeRepeating("Path_Nav", 1.0f, 1.0f);
         Vector3 surv1_pos = GameObject.Find("Circle").transform.position; 
         Vector3 surv2_pos = GameObject.Find("Circle (1)").transform.position;
 
@@ -32,7 +32,9 @@ public class Agent : MonoBehaviour
     // Update is called once per frame
     void Path_Nav()
     {
-        
+        bool x = Game.InObstacle(transform.position);
+        Debug.Log("Is " + (x ? "" : "not ") + "in obstacle");
+
         if(Vector3.Distance(goal_pos, transform.position) < 0.5f)
         {
             return;
