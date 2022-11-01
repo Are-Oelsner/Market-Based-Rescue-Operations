@@ -10,6 +10,14 @@ public class Game : MonoBehaviour
     public int num_agents = 2;
     public Sprite cell_sprite;
 
+    public GameObject[] obstacles;
+    public int num_obstacles = 2;
+
+    public GameObject collision_checker;
+    private BoxCollider2D collision_checker_collider;
+    private BoxCollider2D obstacle_collider;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -34,8 +42,16 @@ public class Game : MonoBehaviour
             spriteRenderer.sprite = cell_sprite;
             agent.transform.position = new Vector3(1, 1, 0);
             agent.transform.parent = self.gameObject.transform;
+            agent.layer = 2;//LayerMask.NameToLayer("Foreground");
             // Add sprites, set goals, set starting positions
         }
+
+        obstacles = new GameObject[num_obstacles];
+        obstacles[0] = GameObject.Find("Obstacle 1");
+        obstacles[1] = GameObject.Find("Obstacle 1");
+
+
+        collision_checker = GameObject.Find("CollisionChecker");
         
     }
 
@@ -45,8 +61,28 @@ public class Game : MonoBehaviour
         
     }
 
-    public static bool InObstacle(Vector3 loc)
+    public bool InObstacle(Vector3 loc)
     {
+        collision_checker.transform.position = loc;
+        foreach(GameObject obstacle in obstacles)
+        {
+            if(CheckCollision(obstacle))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private bool CheckCollision(GameObject obstacle)
+    {
+        // TODO check for collision between collision_checker and obstacle 2D colliders
+        collision_checker_collider = collision_checker.GetComponent<BoxCollider2D>();
+        obstacle_collider = obstacle.GetComponent<BoxCollider2D>();
+        if (collision_checker_collider.bounds.Intersects(obstacle_collider.bounds))
+        {
+            return true;
+        }
         return false;
     }
 
