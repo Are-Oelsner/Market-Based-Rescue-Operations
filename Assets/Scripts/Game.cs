@@ -24,6 +24,10 @@ public class Game : MonoBehaviour
     {
         self = GameObject.Find("Game");
 
+        Vector3[] agent_start_positions = new Vector3[num_agents];
+        agent_start_positions[0] = new Vector3(7.5f, 1.5f, 0);
+        agent_start_positions[1] = new Vector3(-7.5f, -2.5f, 0);
+
         // Initialize Grid
         // grid = self.AddComponent<Grid>() as Grid;
         // grid.init_grid(20, 10, cell_sprite, 1);
@@ -40,7 +44,8 @@ public class Game : MonoBehaviour
             agent.AddComponent<SpriteRenderer>();
             SpriteRenderer spriteRenderer = agent.GetComponent(typeof(SpriteRenderer)) as SpriteRenderer;
             spriteRenderer.sprite = cell_sprite;
-            agent.transform.position = new Vector3(1, 1, 0);
+            spriteRenderer.sortingLayerName = "Foreground";
+            agent.transform.position = agent_start_positions[i];
             agent.transform.parent = self.gameObject.transform;
             agent.layer = 2;//LayerMask.NameToLayer("Foreground");
             // Add sprites, set goals, set starting positions
@@ -48,7 +53,7 @@ public class Game : MonoBehaviour
 
         obstacles = new GameObject[num_obstacles];
         obstacles[0] = GameObject.Find("Obstacle 1");
-        obstacles[1] = GameObject.Find("Obstacle 1");
+        obstacles[1] = GameObject.Find("Obstacle 2");
 
 
         collision_checker = GameObject.Find("CollisionChecker");
