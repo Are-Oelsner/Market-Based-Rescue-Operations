@@ -149,12 +149,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 111385723}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -14.5, y: 0.5, z: 0}
+  m_LocalPosition: {x: -4, y: 0.5, z: 0}
   m_LocalScale: {x: 4, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 935702148}
-  m_RootOrder: 7
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &111385725
 SpriteRenderer:
@@ -459,12 +459,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 494709377}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5, y: 3, z: 0}
+  m_LocalPosition: {x: 5.5, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 935702148}
-  m_RootOrder: 8
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &494709379
 SpriteRenderer:
@@ -725,10 +725,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a068f3577665564e8a91a732b71ab99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  position_x: 0
-  position_y: 0
-  num_gas_masks: 0
-  goal: Goal 1
 --- !u!1 &935702147
 GameObject:
   m_ObjectHideFlags: 0
@@ -764,8 +760,6 @@ Transform:
   - {fileID: 1995578051}
   - {fileID: 1256289485}
   - {fileID: 1779352681}
-  - {fileID: 111385724}
-  - {fileID: 494709378}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -802,6 +796,7 @@ MonoBehaviour:
   agents: []
   num_agents: 2
   cell_sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  create_agents: 0
   obstacles: []
   num_obstacles: 2
   collision_checker: {fileID: 0}
@@ -813,7 +808,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 962655777}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.5, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1375,10 +1370,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a068f3577665564e8a91a732b71ab99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  position_x: 0
-  position_y: 0
-  num_gas_masks: 0
-  goal: Goal 1
 --- !u!1 &1909281060
 GameObject:
   m_ObjectHideFlags: 0

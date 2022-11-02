@@ -9,6 +9,7 @@ public class Game : MonoBehaviour
     public GameObject[] agents;
     public int num_agents = 2;
     public Sprite cell_sprite;
+    public bool create_agents = false;
 
     public GameObject[] obstacles;
     public int num_obstacles = 2;
@@ -24,32 +25,8 @@ public class Game : MonoBehaviour
     {
         self = GameObject.Find("Game");
 
-        Vector3[] agent_start_positions = new Vector3[num_agents];
-        agent_start_positions[0] = new Vector3(7.5f, 1.5f, 0);
-        agent_start_positions[1] = new Vector3(-7.5f, -2.5f, 0);
-
-        // Initialize Grid
-        // grid = self.AddComponent<Grid>() as Grid;
-        // grid.init_grid(20, 10, cell_sprite, 1);
-
         // Initialize Agents
-        agents = new GameObject[num_agents];
-        GameObject agent;
-        for (int i = 0; i < num_agents; i++)
-        {
-
-            agents[i] = new GameObject("Agent" + i);
-            agent = agents[i];
-            agent.AddComponent<Agent>();// as Agent;
-            agent.AddComponent<SpriteRenderer>();
-            SpriteRenderer spriteRenderer = agent.GetComponent(typeof(SpriteRenderer)) as SpriteRenderer;
-            spriteRenderer.sprite = cell_sprite;
-            spriteRenderer.sortingLayerName = "Foreground";
-            agent.transform.position = agent_start_positions[i];
-            agent.transform.parent = self.gameObject.transform;
-            agent.layer = 2;//LayerMask.NameToLayer("Foreground");
-            // Add sprites, set goals, set starting positions
-        }
+        InitAgents(create_agents);
 
         obstacles = new GameObject[num_obstacles];
         obstacles[0] = GameObject.Find("Obstacle 1");
@@ -60,6 +37,39 @@ public class Game : MonoBehaviour
         
     }
 
+    private void InitAgents(bool _create_agents)
+    {
+        if (_create_agents)
+        {
+            Vector3[] agent_start_positions = new Vector3[num_agents];
+            agent_start_positions[0] = new Vector3(7.5f, 1.5f, 0);
+            agent_start_positions[1] = new Vector3(-7.5f, -2.5f, 0);
+
+            // Initialize Grid
+            // grid = self.AddComponent<Grid>() as Grid;
+            // grid.init_grid(20, 10, cell_sprite, 1);
+
+            // Initialize Agents
+            agents = new GameObject[num_agents];
+            GameObject agent;
+            for (int i = 0; i < num_agents; i++)
+            {
+
+                agents[i] = new GameObject("Agent" + i);
+                agent = agents[i];
+                agent.AddComponent<Agent>();// as Agent;
+                agent.AddComponent<SpriteRenderer>();
+                SpriteRenderer spriteRenderer = agent.GetComponent(typeof(SpriteRenderer)) as SpriteRenderer;
+                spriteRenderer.sprite = cell_sprite;
+                spriteRenderer.sortingLayerName = "Foreground";
+                agent.transform.position = agent_start_positions[i];
+                agent.transform.parent = self.gameObject.transform;
+                agent.layer = 2;//LayerMask.NameToLayer("Foreground");
+                                // Add sprites, set goals, set starting positions
+            }
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -68,7 +78,7 @@ public class Game : MonoBehaviour
 
     public bool InObstacle(Vector3 loc)
     {
-        collision_checker.transform.position = loc;
+        collision_checker.transform.position = transform.TransformPoint(loc);
         foreach(GameObject obstacle in obstacles)
         {
             if(CheckCollision(obstacle))
