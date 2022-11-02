@@ -181,10 +181,11 @@ public class Agent : MonoBehaviour
                             insert_to_frontier(frontier, child);
                         }
                     }
-
                 }
                 // If in obstacle, skip this child
             }
+            // add the current expanded node to the explored list
+            explored.Add(node);
         }
 
         //add four nearest to the frontier, if they are not an obstacle
