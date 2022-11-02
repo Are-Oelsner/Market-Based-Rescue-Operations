@@ -33,13 +33,25 @@ public class Agent : MonoBehaviour
 
     void Start()
     {
-        InvokeRepeating("Path_Nav", 2.0f, 1.0f);
         game = GameObject.Find("Game").GetComponent(typeof(Game)) as Game;
+        InvokeRepeating("Path_Nav", 1.0f, 1.0f);
+        Vector3 surv1_pos = GameObject.Find("Circle").transform.position; 
+        Vector3 surv2_pos = GameObject.Find("Circle (1)").transform.position;
+
+        if(Vector3.Distance(surv1_pos, transform.position) > Vector3.Distance(surv2_pos, transform.position))
+        {
+            goal_pos = surv2_pos;
+        }
+        else
+        {
+            goal_pos = surv1_pos;
+        }
     }
 
     // Update is called once per frame
     void Path_Nav()
     {
+
         Debug.Log(A_star(transform.position, goal_pos));
 
         if(Vector3.Distance(goal_pos, transform.position) < 0.5f)
@@ -53,7 +65,15 @@ public class Agent : MonoBehaviour
 
         for(int i = 0; i < 4; i++)
         {
-            dists[i] = Vector3.Distance(transforms[i], goal_pos);
+            if (game.InObstacle(transforms[i]))
+            {
+                Debug.Log("" + i + ": In Obstacle: " + transforms[i]);
+                dists[i] = 9999f;
+            }
+            else
+            {
+                dists[i] = Vector3.Distance(transforms[i], goal_pos);
+            }
         }
 
         int min_dist = get_min_index(dists);
