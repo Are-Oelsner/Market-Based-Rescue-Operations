@@ -52,7 +52,7 @@ public class Agent : MonoBehaviour
     void Path_Nav()
     {
 
-        Debug.Log(A_star(transform.position, goal_pos));
+        //Debug.Log(A_star(transform.position, goal_pos));
 
         if(Vector3.Distance(goal_pos, transform.position) < 0.5f)
         {
@@ -65,19 +65,20 @@ public class Agent : MonoBehaviour
 
         for(int i = 0; i < 4; i++)
         {
-            if (game.InObstacle(transforms[i]))
-            {
-                Debug.Log("" + i + ": In Obstacle: " + transforms[i]);
-                dists[i] = 9999f;
-            }
-            else
-            {
+            //if (game.InObstacle(transforms[i]))
+            //{
+                //Debug.Log("" + i + ": In Obstacle: " + transforms[i]);
+                //dists[i] = 9999f;
+            //}
+            //else
+            //{
                 dists[i] = Vector3.Distance(transforms[i], goal_pos);
-            }
+            //}
         }
 
         int min_dist = get_min_index(dists);
         transform.position = transforms[min_dist];
+        print(game.InObstacle(transform.position));
 
     }
 

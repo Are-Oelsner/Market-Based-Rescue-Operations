@@ -32,9 +32,7 @@ public class Game : MonoBehaviour
         obstacles[0] = GameObject.Find("Obstacle 1");
         obstacles[1] = GameObject.Find("Obstacle 2");
 
-
         collision_checker = GameObject.Find("CollisionChecker");
-        
     }
 
     private void InitAgents(bool _create_agents)
@@ -78,7 +76,7 @@ public class Game : MonoBehaviour
 
     public bool InObstacle(Vector3 loc)
     {
-        collision_checker.transform.position = transform.TransformPoint(loc);
+        collision_checker.transform.position = loc;// transform.TransformPoint(loc);
         foreach(GameObject obstacle in obstacles)
         {
             if(CheckCollision(obstacle))
