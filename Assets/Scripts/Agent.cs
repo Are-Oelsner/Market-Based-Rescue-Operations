@@ -63,22 +63,22 @@ public class Agent : MonoBehaviour
 
         dists = new float[4];
 
-        for(int i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++)
         {
-            //if (game.InObstacle(transforms[i]))
-            //{
-                //Debug.Log("" + i + ": In Obstacle: " + transforms[i]);
-                //dists[i] = 9999f;
-            //}
-            //else
-            //{
+            if (game.InObstacle(transforms[i]))
+            {
+                Debug.Log("" + i + ": In Obstacle: " + transforms[i]);
+                dists[i] = 9999f;
+                //dists[i] = Vector3.Distance(transforms[i], goal_pos);
+            }
+            else
+            {
                 dists[i] = Vector3.Distance(transforms[i], goal_pos);
-            //}
+            }
         }
 
         int min_dist = get_min_index(dists);
         transform.position = transforms[min_dist];
-        print(game.InObstacle(transform.position));
 
     }
 
