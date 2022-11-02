@@ -34,6 +34,7 @@ public class Agent : MonoBehaviour
     void Start()
     {
         InvokeRepeating("Path_Nav", 2.0f, 1.0f);
+        game = GameObject.Find("Game").GetComponent(typeof(Game)) as Game;
     }
 
     // Update is called once per frame
