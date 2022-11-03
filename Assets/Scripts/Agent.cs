@@ -16,6 +16,7 @@ public class Node
         cost = c; 
         h_cost = h;
     }
+
 }
 
 public class Agent : MonoBehaviour
@@ -30,10 +31,16 @@ public class Agent : MonoBehaviour
     private float[] dists;
     private Vector3 goal_pos;
     private Game game;
+    // Used for drawing movement history line
+    private Vector3[] position_history = new Vector3[100];
+    private int position_number = 0;
+    LineRenderer line_renderer;
 
     void Start()
     {
         game = GameObject.Find("Game").GetComponent(typeof(Game)) as Game;
+        // Set up line renderer for drawing paths
+        line_renderer = GameObject.Find("Line").GetComponent(typeof(LineRenderer)) as LineRenderer;
         Vector3 surv1_pos = GameObject.Find("Circle").transform.position; 
         Vector3 surv2_pos = GameObject.Find("Circle (1)").transform.position;
         if(Vector3.Distance(surv1_pos, transform.position) > Vector3.Distance(surv2_pos, transform.position))
@@ -76,6 +83,10 @@ public class Agent : MonoBehaviour
 
         int min_dist = get_min_index(dists);
         transform.position = transforms[min_dist];
+
+        // Draw path of movement history, can use this to draw A* paths
+        position_history[position_number++] = transform.position;
+        DrawPath(position_history);
 
     }
 
@@ -188,6 +199,13 @@ public class Agent : MonoBehaviour
 
         //add four nearest to the frontier, if they are not an obstacle
 
+    }
+
+    // Given an array of Vector3 positions, draw a line through the given points
+    public void DrawPath(Vector3[] positions)
+    {
+        line_renderer.positionCount = position_number;
+        line_renderer.SetPositions(positions);
     }
 
 }
