@@ -96,6 +96,10 @@ public class Game : MonoBehaviour
         {
             return true;
         }
+        else if(obstacle_collider.bounds.Contains(collision_checker.transform.position))
+        {
+            return true;
+        }
         return false;
     }
 
