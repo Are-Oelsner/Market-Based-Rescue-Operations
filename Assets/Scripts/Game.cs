@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Game : MonoBehaviour
 {
-    // public Grid grid;
-    public GameObject self;
     public GameObject[] agents;
     public int num_agents = 2;
     public Sprite cell_sprite;
@@ -23,14 +21,18 @@ public class Game : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        self = GameObject.Find("Game");
-
         // Initialize Agents
         InitAgents(create_agents);
 
+        GameObject obstacles_parent = GameObject.Find("Obstacles");
+        int num_obstacles = obstacles_parent.transform.childCount;
         obstacles = new GameObject[num_obstacles];
-        obstacles[0] = GameObject.Find("Obstacle 1");
-        obstacles[1] = GameObject.Find("Obstacle 2");
+        for(int i = 0; i < num_obstacles; i++)
+        {
+            obstacles[i] = obstacles_parent.transform.GetChild(i).gameObject;
+        }
+
+        //obstacles[0] = GameObject.Find("Obstacle 1");
 
         collision_checker = GameObject.Find("CollisionChecker");
     }
@@ -44,7 +46,7 @@ public class Game : MonoBehaviour
             agent_start_positions[1] = new Vector3(-7.5f, -2.5f, 0);
 
             // Initialize Grid
-            // grid = self.AddComponent<Grid>() as Grid;
+            // grid = gameObject.AddComponent<Grid>() as Grid;
             // grid.init_grid(20, 10, cell_sprite, 1);
 
             // Initialize Agents
@@ -61,7 +63,7 @@ public class Game : MonoBehaviour
                 spriteRenderer.sprite = cell_sprite;
                 spriteRenderer.sortingLayerName = "Foreground";
                 agent.transform.position = agent_start_positions[i];
-                agent.transform.parent = self.gameObject.transform;
+                agent.transform.parent = gameObject.transform;
                 agent.layer = 2;//LayerMask.NameToLayer("Foreground");
                                 // Add sprites, set goals, set starting positions
             }

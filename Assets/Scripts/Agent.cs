@@ -21,28 +21,30 @@ public class Node
 
 public class Agent : MonoBehaviour
 {
-    public float position_x;
-    public float position_y;
     public int num_gas_masks;
-    public string goal = "Goal 1";
-    public const float STEP_COST = 1.0f;
+    public const float STEP_COST = 1.0f;// Distance traveled in a single step of movement
 
-    // Storing helper variables so we don't need to reallocate space for them everytime Path_Nav is called
-    private float[] dists;
-    private Vector3 goal_pos;
-    private Game game;
-    // Used for drawing movement history line
-    private Vector3[] position_history = new Vector3[100];
-    private int position_number = 0;
-    LineRenderer line_renderer;
+    private Game game;                  // Reference to Game script for using InObstacle
+    private float[] dists;              // variable used in early path_nav, can be deleted when A* is implemented TODO
+    private Vector3 goal_pos;           // variable used for storing goal position
+    public GameObject goal_object;      // public field for setting goal manually through unity
+    public GameObject LineRenderer;
+
+    LineRenderer line_renderer;         // Component for drawing lines 
+    private int position_number = 0;    // number of positions the agent has been to, used for drawing position history lines
+    private Vector3[] position_history = new Vector3[100]; // Array of positions the agent has visited
 
     void Start()
     {
         game = GameObject.Find("Game").GetComponent(typeof(Game)) as Game;
+
         // Set up line renderer for drawing paths
-        line_renderer = GameObject.Find("Line").GetComponent(typeof(LineRenderer)) as LineRenderer;
-        Vector3 surv1_pos = GameObject.Find("Circle").transform.position; 
-        Vector3 surv2_pos = GameObject.Find("Circle (1)").transform.position;
+        // line_renderer = GameObject.Find("Line").GetComponent(typeof(LineRenderer)) as LineRenderer;  
+        //line_renderer = gameObject.GetComponent(typeof(LineRenderer)) as LineRenderer;  
+        line_renderer = LineRenderer.GetComponent(typeof(LineRenderer)) as LineRenderer;  
+        position_history[position_number++] = gameObject.transform.position; // Set initial position to agent's current position
+        Vector3 surv1_pos = GameObject.Find("Group 1").transform.position; 
+        Vector3 surv2_pos = GameObject.Find("Group 2").transform.position;
         if(Vector3.Distance(surv1_pos, transform.position) > Vector3.Distance(surv2_pos, transform.position))
         {
             goal_pos = surv2_pos;
@@ -50,6 +52,10 @@ public class Agent : MonoBehaviour
         else
         {
             goal_pos = surv1_pos;
+        }
+        if (goal_object != null)
+        {
+            goal_pos = goal_object.transform.position;
         }
         InvokeRepeating("Path_Nav", 1.0f, 1.0f);
     }
