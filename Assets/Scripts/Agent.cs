@@ -5,14 +5,14 @@ using UnityEngine;
 public class Node
 {
     public Vector3 position;
-    public Vector3 parent_pos;
+    public Node parent;
     public float cost;
     public float h_cost;
 
-    public Node(Vector3 pos, Vector3 par_pos, float c, float h)
+    public Node(Vector3 pos, Node parent_node, float c, float h)
     {
         position = pos;
-        parent_pos = par_pos;
+        parent = parent_node;
         cost = c; 
         h_cost = h;
     }
@@ -22,7 +22,7 @@ public class Node
 public class Agent : MonoBehaviour
 {
     public int num_gas_masks;
-    public const float STEP_COST = 1.0f;// Distance traveled in a single step of movement
+    public const float STEP_COST = 0.1f;// Distance traveled in a single step of movement, also amount of time between calls of Path_Nav()
 
     private Game game;                  // Reference to Game script for using InObstacle
     private float[] dists;              // variable used in early path_nav, can be deleted when A* is implemented TODO
@@ -32,7 +32,9 @@ public class Agent : MonoBehaviour
 
     LineRenderer line_renderer;         // Component for drawing lines 
     private int position_number = 0;    // number of positions the agent has been to, used for drawing position history lines
-    private Vector3[] position_history = new Vector3[1000]; // Array of positions the agent has visited
+    private Vector3[] position_history = new Vector3[10000]; // Array of positions the agent has visited
+    private List<Vector3> a_star_path;
+    private int current_timestep = 0;
 
     void Start()
     {
@@ -57,38 +59,21 @@ public class Agent : MonoBehaviour
         {
             goal_pos = goal_object.transform.position;
         }
-        InvokeRepeating("Path_Nav", 1.0f, 1.0f);
+        InvokeRepeating("Path_Nav", 1.0f, STEP_COST);
+
+        a_star_path = A_star(transform.position, goal_pos);
+        Debug.Log(a_star_path[0]);
     }
 
     // Update is called once per frame
     void Path_Nav()
     {
-        Debug.Log(A_star(transform.position, goal_pos));
-
-        if(Vector3.Distance(goal_pos, transform.position) < 0.5f)
+        // Go to the next position!
+        if(current_timestep != a_star_path.Count)
         {
-            return;
+            transform.position = a_star_path[a_star_path.Count - current_timestep - 1];
+            current_timestep++;
         }
-
-        Vector3[] transforms = {new Vector3(STEP_COST,0,0) + transform.position, new Vector3(-STEP_COST,0,0) + transform.position, new Vector3(0,STEP_COST,0) + transform.position, new Vector3(0,-STEP_COST,0) + transform.position};
-        dists = new float[4];
-
-        for (int i = 0; i < 4; i++)
-        {
-            //print("Checking " + i + ", " + transforms[i] + " : " + game.InObstacle(transforms[i]));
-            if (game.InObstacle(transforms[i]))
-            {
-                //Debug.Log("" + i + ": In Obstacle: " + transforms[i]);
-                dists[i] = 9999f;
-            }
-            else
-            {
-                dists[i] = Vector3.Distance(transforms[i], goal_pos);
-            }
-        }
-
-        int min_dist = get_min_index(dists);
-        transform.position = transforms[min_dist];
 
         // Draw path of movement history, can use this to draw A* paths
         position_history[position_number++] = transform.position;
@@ -144,18 +129,30 @@ public class Agent : MonoBehaviour
         return (false, -1);
     }
 
+    private List<Vector3> Solution(Node node)
+    {
+        List<Vector3> ret = new List<Vector3>();
+
+        while(node.parent != null)
+        {
+            ret.Add(node.position);
+            node = node.parent;
+        }
+        return ret;
+    }
+
     //A star search
-    private float A_star(Vector3 start, Vector3 goal)
+    private List<Vector3> A_star(Vector3 start, Vector3 goal)
     {
         //List<Vector3> path = new List<Vector3>();
 
         // frontier is a sorted list with best candidate to expand first
         List<Node> frontier = new List<Node>();
         List<Node> explored = new List<Node>();
-        Vector3[] transforms = {new Vector3(1,0,0), new Vector3(-1,0,0), new Vector3(0,1,0), new Vector3(0,-1,0)};
+        Vector3[] transforms = {new Vector3(STEP_COST,0,0), new Vector3(-STEP_COST,0,0), new Vector3(0,STEP_COST,0), new Vector3(0,-STEP_COST,0)};
 
         // first item is its own parent, to indicate end of list
-        Node first = new Node(start, start, 0f, Vector3.Distance(start,goal));
+        Node first = new Node(start, null, 0f, Vector3.Distance(start,goal));
 
         frontier.Add(first);
 
@@ -165,10 +162,11 @@ public class Agent : MonoBehaviour
             Node node = frontier[0];
             frontier.RemoveAt(0);
 
-            if(Vector3.Distance(node.position, goal) < 0.5f)
+            if(Vector3.Distance(node.position, goal) < STEP_COST/2f)
             {
-                // if we have found the goal, return the path to it by iterating over the parents, for now just null
-                return node.cost;
+                // if we have found the goal, return the path to it by iterating over the parents
+                //return node.cost;
+                return Solution(node);
             }
 
             foreach(Vector3 t in transforms)
@@ -178,7 +176,7 @@ public class Agent : MonoBehaviour
                 {
                     //Create child node with distance equal to parent_cost + cost to move from parent to child + heuristic (straight line dist)
                     float act_cost = node.cost + STEP_COST;
-                    Node child = new Node(new_pos, node.position, act_cost, act_cost + Vector3.Distance(new_pos, goal));
+                    Node child = new Node(new_pos, node, act_cost, act_cost + Vector3.Distance(new_pos, goal));
 
                     // if the child is in explored, skip it
                     if(!is_in_list(explored, new_pos).Item1)
