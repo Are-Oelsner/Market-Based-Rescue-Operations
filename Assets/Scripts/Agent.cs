@@ -68,17 +68,21 @@ public class Agent : MonoBehaviour
             goal_pos = survivor_groups[Array.IndexOf(survivor_distances, survivor_distances.Min())].transform.position;
         }
 
-        InvokeRepeating("Path_Nav", 1.0f, .1f*STEP_COST);
-
-        a_star_path = A_star(transform.position, goal_pos);
-        a_star_path_array = a_star_path.ToArray();
-        DrawPath(a_star_path_array);
-        Debug.Log(a_star_path[0]);
+        InvokeRepeating("Path_Nav", 1.0f, .5f*STEP_COST);
     }
 
     // Update is called once per frame
     void Path_Nav()
     {
+        // First time Path_Nav is called, run A*
+        if(current_timestep == 0 )
+        {
+            a_star_path = A_star(transform.position, goal_pos);
+            a_star_path_array = a_star_path.ToArray();
+            DrawPath(a_star_path_array);
+            Debug.Log(a_star_path[0]);
+        }
+
         // Go to the next position!
         if(current_timestep != a_star_path.Count)
         {
