@@ -97,8 +97,8 @@ public class Game : MonoBehaviour
         if (collision_checker_collider.bounds.Intersects(obstacle_collider.bounds))
         {
             return true;
-        }
-        else if(obstacle_collider.bounds.Contains(collision_checker.transform.position))
+        } // TODO check four points from step_size offset
+        else if (obstacle_collider.bounds.Contains(collision_checker.transform.position))
         {
             return true;
         }
