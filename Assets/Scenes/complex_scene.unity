@@ -835,7 +835,7 @@ MonoBehaviour:
   create_agents: 0
   obstacles: []
   num_obstacles: 2
-  collision_checker: {fileID: 0}
+  collision_checker: {fileID: 1075627044}
 --- !u!4 &962655779
 Transform:
   m_ObjectHideFlags: 0
