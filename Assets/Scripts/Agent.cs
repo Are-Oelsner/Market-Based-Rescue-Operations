@@ -32,7 +32,7 @@ public class Agent : MonoBehaviour
 
     LineRenderer line_renderer;         // Component for drawing lines 
     private int position_number = 0;    // number of positions the agent has been to, used for drawing position history lines
-    private Vector3[] position_history = new Vector3[100]; // Array of positions the agent has visited
+    private Vector3[] position_history = new Vector3[1000]; // Array of positions the agent has visited
 
     void Start()
     {
