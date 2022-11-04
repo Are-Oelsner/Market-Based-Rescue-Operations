@@ -38,6 +38,8 @@ public class Agent : MonoBehaviour
     private List<Vector3> a_star_path;
     private int current_timestep = 0;
 
+    Vector3[] a_star_path_array;
+
     void Start()
     {
         game = GameObject.Find("Game").GetComponent(typeof(Game)) as Game;
@@ -69,6 +71,8 @@ public class Agent : MonoBehaviour
         InvokeRepeating("Path_Nav", 1.0f, .1f*STEP_COST);
 
         a_star_path = A_star(transform.position, goal_pos);
+        a_star_path_array = a_star_path.ToArray();
+        DrawPath(a_star_path_array);
         Debug.Log(a_star_path[0]);
     }
 
@@ -83,8 +87,8 @@ public class Agent : MonoBehaviour
         }
 
         // Draw path of movement history, can use this to draw A* paths
-        position_history[position_number++] = transform.position;
-        DrawPath(position_history);
+        //position_history[position_number++] = transform.position;
+        //DrawPath(position_history);
 
     }
 
@@ -215,7 +219,7 @@ public class Agent : MonoBehaviour
     // Given an array of Vector3 positions, draw a line through the given points
     public void DrawPath(Vector3[] positions)
     {
-        line_renderer.positionCount = position_number;
+        line_renderer.positionCount = positions.Length;
         line_renderer.SetPositions(positions);
     }
 
