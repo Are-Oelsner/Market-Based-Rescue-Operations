@@ -68,42 +68,12 @@ public class Agent : MonoBehaviour
     // Update is called once per frame
     void Path_Nav()
     {
+        // Go to the next position!
         if(current_timestep != a_star_path.Count)
         {
             transform.position = a_star_path[a_star_path.Count - current_timestep - 1];
             current_timestep++;
         }
-        /*
-        List<Vector3> a_star = A_star(transform.position, goal_pos);
-        Debug.Log(transform.position);
-        Debug.Log(a_star[a_star.Count - 1]);
-        transform.position = a_star[a_star.Count - 1];
-
-        if(Vector3.Distance(goal_pos, transform.position) < 0.5f)
-        {
-            return;
-        }*/
-        /*
-        Vector3[] transforms = {new Vector3(STEP_COST,0,0) + transform.position, new Vector3(-STEP_COST,0,0) + transform.position, new Vector3(0,STEP_COST,0) + transform.position, new Vector3(0,-STEP_COST,0) + transform.position};
-        dists = new float[4];
-
-        for (int i = 0; i < 4; i++)
-        {
-            //print("Checking " + i + ", " + transforms[i] + " : " + game.InObstacle(transforms[i]));
-            if (game.InObstacle(transforms[i]))
-            {
-                //Debug.Log("" + i + ": In Obstacle: " + transforms[i]);
-                dists[i] = 9999f;
-            }
-            else
-            {
-                dists[i] = Vector3.Distance(transforms[i], goal_pos);
-            }
-        }
-
-        int min_dist = get_min_index(dists);
-        transform.position = transforms[min_dist];
-        */
 
         // Draw path of movement history, can use this to draw A* paths
         position_history[position_number++] = transform.position;
