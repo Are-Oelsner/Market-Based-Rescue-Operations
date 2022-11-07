@@ -76,12 +76,12 @@ public class Game : MonoBehaviour
         
     }
 
-    public bool InObstacle(Vector3 loc)
+    public bool InObstacle(Vector3 position)
     {
-        collision_checker.transform.position = loc;// transform.TransformPoint(loc);
+        //collision_checker.transform.position = loc;// transform.TransformPoint(loc);
         foreach(GameObject obstacle in obstacles)
         {
-            if(CheckCollision(obstacle))
+            if(CheckCollision(obstacle, position))
             {
                 return true;
             }
@@ -89,16 +89,16 @@ public class Game : MonoBehaviour
         return false;
     }
 
-    private bool CheckCollision(GameObject obstacle)
+    private bool CheckCollision(GameObject obstacle, Vector3 position)
     {
         // TODO check for collision between collision_checker and obstacle 2D colliders
-        collision_checker_collider = collision_checker.GetComponent<BoxCollider2D>();
+        //collision_checker_collider = collision_checker.GetComponent<BoxCollider2D>();
         obstacle_collider = obstacle.GetComponent<BoxCollider2D>();
-        if (collision_checker_collider.bounds.Intersects(obstacle_collider.bounds))
-        {
-            return true;
-        }
-        else if(obstacle_collider.bounds.Contains(collision_checker.transform.position))
+        //if (collision_checker_collider.bounds.Intersects(obstacle_collider.bounds))
+        //{
+        //    return true;
+        //} // TODO check four points from step_size offset
+        if (obstacle_collider.bounds.Contains(position))
         {
             return true;
         }

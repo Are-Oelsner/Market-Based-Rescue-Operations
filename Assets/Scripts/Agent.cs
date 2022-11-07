@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
+using System.Linq;
 
 public class Node
 {
@@ -22,7 +24,7 @@ public class Node
 public class Agent : MonoBehaviour
 {
     public int num_gas_masks;
-    public const float STEP_COST = 0.1f;// Distance traveled in a single step of movement, also amount of time between calls of Path_Nav()
+    public const float STEP_COST = 1.0f;// Distance traveled in a single step of movement, also amount of time between calls of Path_Nav()
 
     private Game game;                  // Reference to Game script for using InObstacle
     private float[] dists;              // variable used in early path_nav, can be deleted when A* is implemented TODO
@@ -36,6 +38,8 @@ public class Agent : MonoBehaviour
     private List<Vector3> a_star_path;
     private int current_timestep = 0;
 
+    Vector3[] a_star_path_array;
+
     void Start()
     {
         game = GameObject.Find("Game").GetComponent(typeof(Game)) as Game;
@@ -45,29 +49,40 @@ public class Agent : MonoBehaviour
         //line_renderer = gameObject.GetComponent(typeof(LineRenderer)) as LineRenderer;  
         line_renderer = LineRenderer.GetComponent(typeof(LineRenderer)) as LineRenderer;  
         position_history[position_number++] = gameObject.transform.position; // Set initial position to agent's current position
-        Vector3 surv1_pos = GameObject.Find("Group 1").transform.position; 
-        Vector3 surv2_pos = GameObject.Find("Group 2").transform.position;
-        if(Vector3.Distance(surv1_pos, transform.position) > Vector3.Distance(surv2_pos, transform.position))
-        {
-            goal_pos = surv2_pos;
-        }
-        else
-        {
-            goal_pos = surv1_pos;
-        }
+
+
+        // Code for computing which survivor group is closest to the agent, if one hasn't been manually set as the goal
         if (goal_object != null)
         {
-            goal_pos = goal_object.transform.position;
-        }
-        InvokeRepeating("Path_Nav", 1.0f, STEP_COST);
+            GameObject survivors_parent = GameObject.Find("Survivors");
+            int num_survivor_groups = survivors_parent.transform.childCount;
+            GameObject[] survivor_groups = new GameObject[num_survivor_groups];
 
-        a_star_path = A_star(transform.position, goal_pos);
-        Debug.Log(a_star_path[0]);
+            int[] survivor_distances = new int[num_survivor_groups];
+            for (int i = 0; i < num_survivor_groups; i++)
+            {
+                survivor_groups[i] = survivors_parent.transform.GetChild(i).gameObject;
+                survivor_distances[i] = A_star(transform.position, survivor_groups[i].transform.position).Count;
+                Debug.Log(gameObject.name + ": " + survivor_distances[i]);
+            }
+            goal_pos = survivor_groups[Array.IndexOf(survivor_distances, survivor_distances.Min())].transform.position;
+        }
+
+        InvokeRepeating("Path_Nav", 1.0f, .5f*STEP_COST);
     }
 
     // Update is called once per frame
     void Path_Nav()
     {
+        // First time Path_Nav is called, run A*
+        if(current_timestep == 0 )
+        {
+            a_star_path = A_star(transform.position, goal_pos);
+            a_star_path_array = a_star_path.ToArray();
+            DrawPath(a_star_path_array);
+            Debug.Log(a_star_path[0]);
+        }
+
         // Go to the next position!
         if(current_timestep != a_star_path.Count)
         {
@@ -76,8 +91,8 @@ public class Agent : MonoBehaviour
         }
 
         // Draw path of movement history, can use this to draw A* paths
-        position_history[position_number++] = transform.position;
-        DrawPath(position_history);
+        //position_history[position_number++] = transform.position;
+        //DrawPath(position_history);
 
     }
 
@@ -208,7 +223,7 @@ public class Agent : MonoBehaviour
     // Given an array of Vector3 positions, draw a line through the given points
     public void DrawPath(Vector3[] positions)
     {
-        line_renderer.positionCount = position_number;
+        line_renderer.positionCount = positions.Length;
         line_renderer.SetPositions(positions);
     }
 
