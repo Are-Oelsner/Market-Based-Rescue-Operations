@@ -28,7 +28,7 @@ public class Agent : MonoBehaviour
 
     private Game game;                  // Reference to Game script for using InObstacle
     private float[] dists;              // variable used in early path_nav, can be deleted when A* is implemented TODO
-    private Vector3 goal_pos;           // variable used for storing goal position
+    public Vector3 goal_pos;           // variable used for storing goal position
     public GameObject goal_object;      // public field for setting goal manually through unity
     public GameObject LineRenderer;
 
@@ -42,7 +42,7 @@ public class Agent : MonoBehaviour
 
     void Start()
     {
-        game = GameObject.Find("Game").GetComponent(typeof(Game)) as Game;
+        //game = GameObject.Find("Game").GetComponent(typeof(Game)) as Game;
 
         // Set up line renderer for drawing paths
         // line_renderer = GameObject.Find("Line").GetComponent(typeof(LineRenderer)) as LineRenderer;  
@@ -51,36 +51,49 @@ public class Agent : MonoBehaviour
         position_history[position_number++] = gameObject.transform.position; // Set initial position to agent's current position
 
 
-        // Code for computing which survivor group is closest to the agent, if one hasn't been manually set as the goal
-        if (goal_object != null)
-        {
-            GameObject survivors_parent = GameObject.Find("Survivors");
-            int num_survivor_groups = survivors_parent.transform.childCount;
-            GameObject[] survivor_groups = new GameObject[num_survivor_groups];
-
-            int[] survivor_distances = new int[num_survivor_groups];
-            for (int i = 0; i < num_survivor_groups; i++)
-            {
-                survivor_groups[i] = survivors_parent.transform.GetChild(i).gameObject;
-                survivor_distances[i] = A_star(transform.position, survivor_groups[i].transform.position).Count;
-                Debug.Log(gameObject.name + ": " + survivor_distances[i]);
-            }
-            goal_pos = survivor_groups[Array.IndexOf(survivor_distances, survivor_distances.Min())].transform.position;
-        }
-
         InvokeRepeating("Path_Nav", 1.0f, .5f*STEP_COST);
     }
 
-    // Update is called once per frame
-    void Path_Nav()
+    public int GetInd()
     {
-        // First time Path_Nav is called, run A*
+        return transform.GetSiblingIndex();
+    }
+
+    public void SetGame(Game game_script)
+    {
+        game = game_script;
+    }
+
+    // Update is called once per frame
+    public void Path_Nav()
+    {
+        // This essentially replaces init function, ensures everything necessary has been initialized
         if(current_timestep == 0 )
         {
-            a_star_path = A_star(transform.position, goal_pos);
-            a_star_path_array = a_star_path.ToArray();
+            // get a list of lengths to the goal
+            List<float> path_lens = new List<float>();
+
+            GameObject survivors_parent = GameObject.Find("Survivors");
+            int num_survivor_groups = survivors_parent.transform.childCount;
+            GameObject[] survivor_groups = new GameObject[num_survivor_groups];
+            List<float> survivor_distances = new List<float>();
+            List<List<Vector3>> paths = new List<List<Vector3>>();
+            for (int i = 0; i < num_survivor_groups; i++)
+            {
+                survivor_groups[i] = survivors_parent.transform.GetChild(i).gameObject;
+                var a_s = A_star(transform.position, survivor_groups[i].transform.position);
+                paths.Add(a_s);
+                survivor_distances.Add(a_s.Count);
+                //Debug.Log(gameObject.name + ": " + survivor_distances[i]);
+            }
+            int goal_index = survivor_distances.IndexOf(survivor_distances.Min());
+
+            // add your bids to the game
+            game.AddBids(transform.GetSiblingIndex(), survivor_distances);
+
+            a_star_path = paths[goal_index];
+            a_star_path_array = paths[goal_index].ToArray();
             DrawPath(a_star_path_array);
-            Debug.Log(a_star_path[0]);
         }
 
         // Go to the next position!

@@ -5,6 +5,7 @@ using UnityEngine;
 public class Game : MonoBehaviour
 {
     public GameObject[] agents;
+    Agent[] agent_objects;
     public int num_agents = 2;
     public Sprite cell_sprite;
     public bool create_agents = false;
@@ -15,6 +16,9 @@ public class Game : MonoBehaviour
     public GameObject collision_checker;
     private BoxCollider2D collision_checker_collider;
     private BoxCollider2D obstacle_collider;
+    private bool initialize_time;
+
+    private List<List<float>> bids = new List<List<float>>(); // rows are agents, columns are survivors
 
 
 
@@ -23,6 +27,18 @@ public class Game : MonoBehaviour
     {
         // Initialize Agents
         InitAgents(create_agents);
+
+        // initialize lists for each agent except the last one (LineRenderers)
+        agent_objects = GameObject.Find("Agents").GetComponentsInChildren<Agent>();
+
+        int counter = 0;
+        foreach(Agent agent in agent_objects)
+        {
+            Debug.Log("Agent " + counter + " has sib index " + agent.GetInd());
+            agent.SetGame(this);
+            bids.Add(new List<float>());
+            counter++;
+        }
 
         GameObject obstacles_parent = GameObject.Find("Obstacles");
         int num_obstacles = obstacles_parent.transform.childCount;
@@ -73,8 +89,29 @@ public class Game : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
+
+    // allows the agent to add its bids to this game
+    public void AddBids(int agent_ind, List<float> agent_bids)
+    {
+        bids[agent_ind] = agent_bids;
+        Debug.Log("Got path length " + agent_bids[0]);
+
+        string s = "\n";
+
+        foreach(List<float> bid in bids)
+        {
+            foreach(float val in bid)
+            {
+                s += val + " ";
+            }
+            s += "\n";
+        }
+
+        Debug.Log(s);
+    }
+
 
     public bool InObstacle(Vector3 position)
     {
