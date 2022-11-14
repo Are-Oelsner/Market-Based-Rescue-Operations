@@ -27,8 +27,8 @@ public class Game : MonoBehaviour
     public int num_obstacles = 2;
 
     public GameObject collision_checker;
-    private BoxCollider2D collision_checker_collider;
-    private BoxCollider2D obstacle_collider;
+    //private BoxCollider2D collision_checker_collider;
+    // private var obstacle_collider;
     private bool initialize_time;
 
     private List<BidList> bids = new List<BidList>(); // rows are agents, columns are survivors
@@ -205,15 +205,30 @@ public class Game : MonoBehaviour
     {
         // TODO check for collision between collision_checker and obstacle 2D colliders
         //collision_checker_collider = collision_checker.GetComponent<BoxCollider2D>();
+        Collider2D obstacle_collider;
         obstacle_collider = obstacle.GetComponent<BoxCollider2D>();
-        //if (collision_checker_collider.bounds.Intersects(obstacle_collider.bounds))
-        //{
-        //    return true;
-        //} // TODO check four points from step_size offset
-        if (obstacle_collider.bounds.Contains(position))
+        if (obstacle_collider == null)
+        {
+            print("circle collider");
+            obstacle_collider = obstacle.GetComponent<CircleCollider2D>();
+            print("after circle collider"+ obstacle_collider);
+        }
+        // try
+        // {
+        //     obstacle_collider = obstacle.GetComponent<BoxCollider2D>();
+        // } catch (MissingComponentException e)
+        // {
+        //     obstacle_collider = obstacle.GetComponent<CircleCollider2D>();
+        // }
+        float offset = .4f;
+        if (obstacle_collider.bounds.Contains(position)) // Check center point
         {
             return true;
-        }
+        } // else check four corners offset from center point
+        //else if(obstacle_collider.bounds.Contains(position + new Vector3(offset, offset, 0)) || obstacle_collider.bounds.Contains(position+ new Vector3(offset, -offset, 0)) || obstacle_collider.bounds.Contains(position+ new Vector3(-offset, -offset, 0)) || obstacle_collider.bounds.Contains(position+new Vector3(-offset, offset, 0)))
+        //{
+        //    return true;
+        //}
         return false;
     }
 
