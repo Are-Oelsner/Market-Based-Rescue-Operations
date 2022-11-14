@@ -37,6 +37,8 @@ public class Agent : MonoBehaviour
     private Vector3[] position_history = new Vector3[10000]; // Array of positions the agent has visited
     private List<Vector3> a_star_path;
     private int current_timestep = 0;
+    private bool path_assigned = false;
+    private bool bids_submitted = false;
 
     Vector3[] a_star_path_array;
 
@@ -64,11 +66,22 @@ public class Agent : MonoBehaviour
         game = game_script;
     }
 
+    public void AssignPath(int survivor_num)
+    {
+        // recompute the path to that group of survivors, instead of storing every path
+        goal_pos = GameObject.Find("Survivors").transform.GetChild(survivor_num).gameObject.transform.position;
+        Debug.Log("Agent " + GetInd() + " assigned to Survivor " + survivor_num);
+        a_star_path = A_star(transform.position, goal_pos);
+        a_star_path_array = a_star_path.ToArray();
+        DrawPath(a_star_path_array);
+        path_assigned = true;
+    }
+
     // Update is called once per frame
     public void Path_Nav()
     {
         // This essentially replaces init function, ensures everything necessary has been initialized
-        if(current_timestep == 0 )
+        if(!bids_submitted)
         {
             // get a list of lengths to the goal
             List<float> path_lens = new List<float>();
@@ -77,27 +90,21 @@ public class Agent : MonoBehaviour
             int num_survivor_groups = survivors_parent.transform.childCount;
             GameObject[] survivor_groups = new GameObject[num_survivor_groups];
             List<float> survivor_distances = new List<float>();
-            List<List<Vector3>> paths = new List<List<Vector3>>();
             for (int i = 0; i < num_survivor_groups; i++)
             {
                 survivor_groups[i] = survivors_parent.transform.GetChild(i).gameObject;
                 var a_s = A_star(transform.position, survivor_groups[i].transform.position);
-                paths.Add(a_s);
                 survivor_distances.Add(a_s.Count);
                 //Debug.Log(gameObject.name + ": " + survivor_distances[i]);
             }
-            int goal_index = survivor_distances.IndexOf(survivor_distances.Min());
 
             // add your bids to the game
             game.AddBids(transform.GetSiblingIndex(), survivor_distances);
-
-            a_star_path = paths[goal_index];
-            a_star_path_array = paths[goal_index].ToArray();
-            DrawPath(a_star_path_array);
+            bids_submitted = true;
         }
 
         // Go to the next position!
-        if(current_timestep != a_star_path.Count)
+        if(path_assigned && current_timestep != a_star_path.Count)
         {
             transform.position = a_star_path[a_star_path.Count - current_timestep - 1];
             current_timestep++;
