@@ -612,7 +612,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 405f30ce33d8ac646b449023047f167e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  num_survivors: 2
+  num_survivors: 10
 --- !u!212 &112452682
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4625,7 +4625,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbb41f6efaa7c3146be01e63bbe6bacb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  num_gas_masks: 3
+  num_gas_masks: 5
   goal_pos: {x: 0, y: 0, z: 0}
   goal_object: {fileID: 112452679}
   LineRenderer: {fileID: 1878713612}
@@ -10987,7 +10987,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbb41f6efaa7c3146be01e63bbe6bacb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  num_gas_masks: 0
+  num_gas_masks: 5
   goal_pos: {x: 0, y: 0, z: 0}
   goal_object: {fileID: 1538549260}
   LineRenderer: {fileID: 1503287954}
