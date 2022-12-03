@@ -217,7 +217,6 @@ public class Game : MonoBehaviour
     private bool CheckCollision(GameObject obstacle, Vector3 position)
     {
         BoxCollider2D box_collider = obstacle.GetComponent<BoxCollider2D>();
-        float offset = .35f;
         if (box_collider != null)
         {
             if (box_collider.bounds.Contains(position)) // Check center point
