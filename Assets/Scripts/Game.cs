@@ -203,32 +203,31 @@ public class Game : MonoBehaviour
 
     private bool CheckCollision(GameObject obstacle, Vector3 position)
     {
-        // TODO check for collision between collision_checker and obstacle 2D colliders
-        //collision_checker_collider = collision_checker.GetComponent<BoxCollider2D>();
-        Collider2D obstacle_collider;
-        obstacle_collider = obstacle.GetComponent<BoxCollider2D>();
-        if (obstacle_collider == null)
+        BoxCollider2D box_collider = obstacle.GetComponent<BoxCollider2D>();
+        float offset = .35f;
+        if (box_collider != null)
         {
-            print("circle collider");
-            obstacle_collider = obstacle.GetComponent<CircleCollider2D>();
-            print("after circle collider"+ obstacle_collider);
+            if (box_collider.bounds.Contains(position)) // Check center point
+            {
+                return true;
+            } // else check four corners offset from center point
+            //else if(obstacle_collider.bounds.Contains(position + new Vector3(offset, offset, 0)) || obstacle_collider.bounds.Contains(position+ new Vector3(offset, -offset, 0)) || obstacle_collider.bounds.Contains(position+ new Vector3(-offset, -offset, 0)) || obstacle_collider.bounds.Contains(position+new Vector3(-offset, offset, 0)))
+            //{
+            //    return true;
+            //}
         }
-        // try
-        // {
-        //     obstacle_collider = obstacle.GetComponent<BoxCollider2D>();
-        // } catch (MissingComponentException e)
-        // {
-        //     obstacle_collider = obstacle.GetComponent<CircleCollider2D>();
-        // }
-        float offset = .4f;
-        if (obstacle_collider.bounds.Contains(position)) // Check center point
+        else
         {
-            return true;
-        } // else check four corners offset from center point
-        //else if(obstacle_collider.bounds.Contains(position + new Vector3(offset, offset, 0)) || obstacle_collider.bounds.Contains(position+ new Vector3(offset, -offset, 0)) || obstacle_collider.bounds.Contains(position+ new Vector3(-offset, -offset, 0)) || obstacle_collider.bounds.Contains(position+new Vector3(-offset, offset, 0)))
-        //{
-        //    return true;
-        //}
+            CircleCollider2D circle_collider = obstacle.GetComponent<CircleCollider2D>();
+            if (circle_collider.bounds.Contains(position)) // Check center point
+            {
+                return true;
+            } // else check four corners offset from center point
+              //else if(obstacle_collider.bounds.Contains(position + new Vector3(offset, offset, 0)) || obstacle_collider.bounds.Contains(position+ new Vector3(offset, -offset, 0)) || obstacle_collider.bounds.Contains(position+ new Vector3(-offset, -offset, 0)) || obstacle_collider.bounds.Contains(position+new Vector3(-offset, offset, 0)))
+              //{
+              //    return true;
+              //}
+        }
         return false;
     }
 
