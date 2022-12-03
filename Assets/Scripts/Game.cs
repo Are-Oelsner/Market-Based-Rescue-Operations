@@ -1,16 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class BidList
 {
     public bool bid_received;
-    public List<float> bid_list;
+    public List<Bid> bid_list;
 
     public BidList()
     {
         //always empty when initialized
-        bid_list = new List<float>();
+        bid_list = new List<Bid>();
         bid_received = false;
     }
 
@@ -19,6 +20,7 @@ public class Game : MonoBehaviour
 {
     public GameObject[] agents;
     Agent[] agent_objects;
+    Survivors[] survivor_objects;
     public int num_agents = 2;
     public Sprite cell_sprite;
     public bool create_agents = false;
@@ -44,12 +46,12 @@ public class Game : MonoBehaviour
 
         // initialize lists for each agent except the last one (LineRenderers)
         agent_objects = GameObject.Find("Agents").GetComponentsInChildren<Agent>();
-
+        survivor_objects = GameObject.Find("Survivors").GetComponentsInChildren<Survivors>();
         int counter = 0;
         foreach(Agent agent in agent_objects)
         {
             Debug.Log("Agent " + counter + " has sib index " + agent.GetInd());
-            agent.SetGame(this);
+            agent.SetGame(this, survivor_objects);
             bids.Add(new BidList());
             counter++;
         }
@@ -110,7 +112,7 @@ public class Game : MonoBehaviour
     }
 
     // allows the agent to add its bids to this game
-    public void AddBids(int agent_ind, List<float> agent_bids)
+    public void AddBids(int agent_ind, List<Bid> agent_bids)
     {
         bids[agent_ind].bid_list = agent_bids;
         bids[agent_ind].bid_received = true;
@@ -118,11 +120,11 @@ public class Game : MonoBehaviour
 
         string s = "\n";
 
-        foreach(BidList bid in bids)
+        foreach(BidList bidlist in bids)
         {
-            foreach(float val in bid.bid_list)
+            foreach(Bid bid in bidlist.bid_list)
             {
-                s += val + " ";
+                s += bid.gas_num + " ";
             }
             s += "\n";
         }
@@ -144,28 +146,36 @@ public class Game : MonoBehaviour
     {
         int num_assigned = 0;
         int num_agents = agent_objects.Length;
-        float best_bid;
+        int best_num_saved;
+        float best_bid_path;
         int best_agent;
         int best_survivor;
-        List<int> claimed_survivors = new List<int>();
+        int num_saved;
 
         if(bids_received)
         {
             // iterate through bid list, assigning the best bids
             while(num_assigned != num_agents)
             {
-                best_bid = -1f;
+                best_num_saved = -1;
+                best_bid_path = -1f;
                 best_agent = -1;
                 best_survivor = -1;
                 for(int i = 0; i < bids.Count; i++)
                 {
                     for(int j = 0; j < bids[i].bid_list.Count; j++)
                     {
-                        if((best_agent == -1 || bids[i].bid_list[j] < best_bid) && !claimed_survivors.Contains(j))
+                        // number of people that can be saved is minimum of gas masks and survivors in cluster
+                        num_saved = Math.Min(bids[i].bid_list[j].gas_num, survivor_objects[j].num_survivors);
+
+                        if(best_agent == -1 
+                            || num_saved > best_num_saved
+                            || (num_saved == best_num_saved && bids[i].bid_list[j].path_distance < best_bid_path)) //tiebreaker
                         {
                             best_agent = i;
                             best_survivor = j;
-                            best_bid = bids[i].bid_list[j];
+                            best_num_saved = num_saved;
+                            best_bid_path = bids[i].bid_list[j].path_distance;
                         }
                     }
                 }
@@ -175,10 +185,13 @@ public class Game : MonoBehaviour
                 {
                     // assign the best agent to that path
                     agent_objects[best_agent].AssignPath(best_survivor);
-                    claimed_survivors.Add(best_survivor);
+
+                    // adjust the number of people that can be saved, since some are already saved by the gas masks
+                    survivor_objects[best_survivor].num_survivors -= agent_objects[best_agent].num_gas_masks;
+                    
 
                     // remove that list, this agent is done bidding
-                    bids[best_agent].bid_list = new List<float>();
+                    bids[best_agent].bid_list = new List<Bid>();
                 }
             }
 

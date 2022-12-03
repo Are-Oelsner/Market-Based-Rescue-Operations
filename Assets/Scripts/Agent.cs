@@ -21,6 +21,18 @@ public class Node
 
 }
 
+public class Bid
+{
+    public float path_distance;
+    public int gas_num;
+
+    public Bid(float p, int n)
+    {
+        path_distance = p;
+        gas_num = n;
+    }
+}
+
 public class Agent : MonoBehaviour
 {
     public int num_gas_masks;
@@ -39,6 +51,8 @@ public class Agent : MonoBehaviour
     private int current_timestep = 0;
     private bool path_assigned = false;
     private bool bids_submitted = false;
+
+    private Survivors[] survivor_objects;
 
     Vector3[] a_star_path_array;
 
@@ -61,9 +75,10 @@ public class Agent : MonoBehaviour
         return transform.GetSiblingIndex();
     }
 
-    public void SetGame(Game game_script)
+    public void SetGame(Game game_script, Survivors[] s)
     {
         game = game_script;
+        survivor_objects = s;
     }
 
     public void AssignPath(int survivor_num)
@@ -79,7 +94,7 @@ public class Agent : MonoBehaviour
 
     // Update is called once per frame
     public void Path_Nav()
-    {
+    {        
         // This essentially replaces init function, ensures everything necessary has been initialized
         if(!bids_submitted)
         {
@@ -89,17 +104,18 @@ public class Agent : MonoBehaviour
             GameObject survivors_parent = GameObject.Find("Survivors");
             int num_survivor_groups = survivors_parent.transform.childCount;
             GameObject[] survivor_groups = new GameObject[num_survivor_groups];
-            List<float> survivor_distances = new List<float>();
+
+            List<Bid> survivor_bids = new List<Bid>();
             for (int i = 0; i < num_survivor_groups; i++)
             {
                 survivor_groups[i] = survivors_parent.transform.GetChild(i).gameObject;
-                var a_s = A_star(transform.position, survivor_groups[i].transform.position);
-                survivor_distances.Add(a_s.Count);
+                List<Vector3> a_s = A_star(transform.position, survivor_groups[i].transform.position);
+
+                survivor_bids.Add(new Bid(a_s.Count, num_gas_masks));
                 //Debug.Log(gameObject.name + ": " + survivor_distances[i]);
             }
-
             // add your bids to the game
-            game.AddBids(transform.GetSiblingIndex(), survivor_distances);
+            game.AddBids(transform.GetSiblingIndex(), survivor_bids);
             bids_submitted = true;
         }
 
