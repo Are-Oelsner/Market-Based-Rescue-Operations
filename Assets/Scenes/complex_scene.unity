@@ -593,8 +593,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 112452679}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -48.47, y: 23.48, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -48, y: 23, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1688775749}
@@ -612,7 +612,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 405f30ce33d8ac646b449023047f167e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  num_survivors: 10
+  num_survivors: 7
 --- !u!212 &112452682
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2535,7 +2535,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 405f30ce33d8ac646b449023047f167e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  num_survivors: 2
+  num_survivors: 20
 --- !u!212 &483482402
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2898,7 +2898,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 25
+  orthographic size: 25.764193
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -4625,7 +4625,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbb41f6efaa7c3146be01e63bbe6bacb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  num_gas_masks: 5
+  num_gas_masks: 20
   goal_pos: {x: 0, y: 0, z: 0}
   goal_object: {fileID: 112452679}
   LineRenderer: {fileID: 1878713612}
@@ -5478,6 +5478,9 @@ MonoBehaviour:
   obstacles: []
   num_obstacles: 2
   collision_checker: {fileID: 1075627044}
+  soft_limit: 70
+  chance_per_step: 0.05
+  hard_limit: 90
 --- !u!4 &962655779
 Transform:
   m_ObjectHideFlags: 0
@@ -6956,7 +6959,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 405f30ce33d8ac646b449023047f167e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  num_survivors: 2
+  num_survivors: 3
 --- !u!1 &1283864139
 GameObject:
   m_ObjectHideFlags: 0
@@ -8371,7 +8374,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 405f30ce33d8ac646b449023047f167e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  num_survivors: 2
+  num_survivors: 0
 --- !u!212 &1538549263
 SpriteRenderer:
   m_ObjectHideFlags: 0

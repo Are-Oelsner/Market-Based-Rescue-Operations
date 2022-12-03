@@ -36,7 +36,9 @@ public class Game : MonoBehaviour
     private List<BidList> bids = new List<BidList>(); // rows are agents, columns are survivors
     private bool bids_received = false;
 
-
+    public float soft_limit = 150.0f;
+    public float chance_per_step = 0.05f;
+    public float hard_limit = 180.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -69,7 +71,7 @@ public class Game : MonoBehaviour
         collision_checker = GameObject.Find("CollisionChecker");
 
         //Run assign paths function
-        InvokeRepeating("AssignPaths", 0.0f, 0.5f);
+        InvokeRepeating("AssignPaths", 0.0f, 1.0f);
     }
 
     private void InitAgents(bool _create_agents)
@@ -116,7 +118,6 @@ public class Game : MonoBehaviour
     {
         bids[agent_ind].bid_list = agent_bids;
         bids[agent_ind].bid_received = true;
-        Debug.Log("Got path length " + agent_bids[0]);
 
         string s = "\n";
 
@@ -139,18 +140,71 @@ public class Game : MonoBehaviour
             }
         }
 
-        Debug.Log(s);
+        //Debug.Log(s);
     }
+
+    private float WeightedSurvival(float num_survivors, float path_distance)
+    {
+        // chance of death per survivor increases by 5% each step past the soft limit
+        float num_overridden;
+        
+        if(path_distance <= soft_limit)
+        {
+            return (float) num_survivors;
+        }
+        else if(path_distance >= hard_limit)
+        {
+            return 0;
+        }
+        else
+        {
+            num_overridden = path_distance - soft_limit;
+            return (1.0f - chance_per_step * num_overridden) * (float) num_survivors;
+        }
+
+    }
+
+    public int GetNumSaved(int survivor_ind, int path_length, int num_gas_masks)
+    {
+        // chance of death per survivor increases by 5% each step past the soft limit
+        float num_overridden = path_length - soft_limit;
+        int num_alive = 0;
+
+        if(path_length <= soft_limit)
+        {
+            num_alive = (int)survivor_objects[survivor_ind].GetOrigSurvivors();
+            return Math.Min(num_alive, num_gas_masks);
+        }
+
+        float percent_chance_of_survival = (1 - chance_per_step * num_overridden) * 100.0f;
+        int prob;
+        System.Random rand = new System.Random();
+
+        for(int i = 0; i < (int)survivor_objects[survivor_ind].GetOrigSurvivors(); i++)
+        {
+            prob = rand.Next(100);
+            Debug.Log("prob " + prob);
+            if(prob < percent_chance_of_survival)
+            {
+                num_alive += 1;
+            }
+        }
+
+        return Math.Min(num_alive, num_gas_masks);
+
+    }
+
 
     public void AssignPaths()
     {
         int num_assigned = 0;
         int num_agents = agent_objects.Length;
-        int best_num_saved;
+        float best_num_saved;
         float best_bid_path;
         int best_agent;
         int best_survivor;
-        int num_saved;
+        float num_saved;
+        float num_survivors;
 
         if(bids_received)
         {
@@ -161,12 +215,14 @@ public class Game : MonoBehaviour
                 best_bid_path = -1f;
                 best_agent = -1;
                 best_survivor = -1;
+                num_saved = 0;
                 for(int i = 0; i < bids.Count; i++)
                 {
                     for(int j = 0; j < bids[i].bid_list.Count; j++)
                     {
                         // number of people that can be saved is minimum of gas masks and survivors in cluster
-                        num_saved = Math.Min(bids[i].bid_list[j].gas_num, survivor_objects[j].num_survivors);
+                        num_survivors = WeightedSurvival(survivor_objects[j].num_survivors, bids[i].bid_list[j].path_distance);
+                        num_saved = Math.Min((float)bids[i].bid_list[j].gas_num, (float)num_survivors);
 
                         if(best_agent == -1 
                             || num_saved > best_num_saved
@@ -181,8 +237,11 @@ public class Game : MonoBehaviour
                 }
 
                 num_assigned++;
-                if(best_agent != -1)
+                if(best_agent != -1 && best_num_saved > 0)
                 {
+                    //Debug.Log("Agent " + best_agent + " has " + agent_objects[best_agent].num_gas_masks + " masks and path length " + best_bid_path + " and can probably save " + best_num_saved + " people");
+
+
                     // assign the best agent to that path
                     agent_objects[best_agent].AssignPath(best_survivor);
 
