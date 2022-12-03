@@ -612,7 +612,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 405f30ce33d8ac646b449023047f167e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  num_survivors: 7
+  num_survivors: 5
 --- !u!212 &112452682
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -10122,7 +10122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 405f30ce33d8ac646b449023047f167e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  num_survivors: 3
+  num_survivors: 2
 --- !u!1 &1783789547
 GameObject:
   m_ObjectHideFlags: 0
