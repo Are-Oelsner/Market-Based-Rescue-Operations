@@ -6,6 +6,8 @@ public class Survivors : MonoBehaviour
 {
     public float num_survivors;
     private float orig_num;
+
+    private int num_saved = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,5 +23,15 @@ public class Survivors : MonoBehaviour
     public float GetOrigSurvivors()
     {
         return orig_num;
+    }
+
+    public void SaveNum(int num)
+    {
+        num_saved += num;
+    }
+
+    public int GetNumSaved()
+    {
+        return num_saved;
     }
 }
