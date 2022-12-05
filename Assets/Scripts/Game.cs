@@ -82,7 +82,7 @@ public class Game : MonoBehaviour
 
         // set up periodic functions
         InvokeRepeating("AssignPaths", 0.0f, 1.0f);
-        InvokeRepeating("Timer", 0.0f, 1.0f);
+        InvokeRepeating("Timer", 0.0f, 0.25f);
 
     }
 
@@ -90,7 +90,7 @@ public class Game : MonoBehaviour
     {
         if(timer_started)
         {
-            if(time_count == hard_limit * .25f)
+            if(time_count == hard_limit)
             {
                 for(int i = 0; i < survivor_objects.Length; i++)
                 {
