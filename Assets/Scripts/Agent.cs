@@ -51,6 +51,7 @@ public class Agent : MonoBehaviour
     private int current_timestep = 0;
     private bool path_assigned = false;
     private bool bids_submitted = false;
+    private int survivor_assigned_to;
 
     private Survivors[] survivor_objects;
 
@@ -85,6 +86,7 @@ public class Agent : MonoBehaviour
     {
         // recompute the path to that group of survivors, instead of storing every path
         goal_pos = GameObject.Find("Survivors").transform.GetChild(survivor_num).gameObject.transform.position;
+        survivor_assigned_to = survivor_num;
         Debug.Log("Agent " + GetInd() + " assigned to Survivor " + survivor_num);
         a_star_path = A_star(transform.position, goal_pos);
         a_star_path_array = a_star_path.ToArray();
@@ -94,7 +96,7 @@ public class Agent : MonoBehaviour
 
     // Update is called once per frame
     public void Path_Nav()
-    {        
+    {       
         // This essentially replaces init function, ensures everything necessary has been initialized
         if(!bids_submitted)
         {
@@ -104,6 +106,7 @@ public class Agent : MonoBehaviour
             GameObject survivors_parent = GameObject.Find("Survivors");
             int num_survivor_groups = survivors_parent.transform.childCount;
             GameObject[] survivor_groups = new GameObject[num_survivor_groups];
+            float path_len;
 
             List<Bid> survivor_bids = new List<Bid>();
             for (int i = 0; i < num_survivor_groups; i++)
@@ -111,7 +114,16 @@ public class Agent : MonoBehaviour
                 survivor_groups[i] = survivors_parent.transform.GetChild(i).gameObject;
                 List<Vector3> a_s = A_star(transform.position, survivor_groups[i].transform.position);
 
-                survivor_bids.Add(new Bid(a_s.Count, num_gas_masks));
+                if(a_s == null)
+                {
+                    path_len = game.hard_limit;
+                }
+                else
+                {
+                    path_len = a_s.Count;
+                }
+
+                survivor_bids.Add(new Bid(path_len, num_gas_masks));
                 //Debug.Log(gameObject.name + ": " + survivor_distances[i]);
             }
             // add your bids to the game
@@ -124,6 +136,11 @@ public class Agent : MonoBehaviour
         {
             transform.position = a_star_path[a_star_path.Count - current_timestep - 1];
             current_timestep++;
+
+            if(current_timestep == 1)
+            {
+                Debug.Log("Agent " + GetInd() + " saved " + game.GetNumSaved(survivor_assigned_to, a_star_path.Count, num_gas_masks) + " people");
+            }
         }
 
         // Draw path of movement history, can use this to draw A* paths
@@ -211,9 +228,15 @@ public class Agent : MonoBehaviour
         {
             // pop the node with the lowest cost
             Node node = frontier[0];
+
+            if(node.cost >= game.hard_limit)
+            {
+                return null;
+            }
+
             frontier.RemoveAt(0);
 
-            if(Vector3.Distance(node.position, goal) < STEP_COST/2f)
+            if(Vector3.Distance(node.position, goal) < STEP_COST)
             {
                 // if we have found the goal, return the path to it by iterating over the parents
                 //return node.cost;
