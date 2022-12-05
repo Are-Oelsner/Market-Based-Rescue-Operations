@@ -28,6 +28,8 @@ public class Game : MonoBehaviour
     public GameObject[] obstacles;
     public int num_obstacles = 2;
 
+    Scoreboard scoreboard;
+
     public GameObject collision_checker;
     //private BoxCollider2D collision_checker_collider;
     // private var obstacle_collider;
@@ -45,6 +47,8 @@ public class Game : MonoBehaviour
     {
         // Initialize Agents
         InitAgents(create_agents);
+
+        scoreboard = GameObject.Find("Survivor Stats").GetComponent(typeof(Scoreboard)) as Scoreboard;
 
         // initialize lists for each agent except the last one (LineRenderers)
         agent_objects = GameObject.Find("Agents").GetComponentsInChildren<Agent>();
@@ -169,10 +173,12 @@ public class Game : MonoBehaviour
         // chance of death per survivor increases by 5% each step past the soft limit
         float num_overridden = path_length - soft_limit;
         int num_alive = 0;
+        int num_saved = 0;
+        int num_to_save = (int)survivor_objects[survivor_ind].GetOrigSurvivors();
 
         if(path_length <= soft_limit)
         {
-            num_alive = (int)survivor_objects[survivor_ind].GetOrigSurvivors();
+            num_alive = num_to_save;
             return Math.Min(num_alive, num_gas_masks);
         }
 
@@ -180,7 +186,7 @@ public class Game : MonoBehaviour
         int prob;
         System.Random rand = new System.Random();
 
-        for(int i = 0; i < (int)survivor_objects[survivor_ind].GetOrigSurvivors(); i++)
+        for(int i = 0; i < num_to_save; i++)
         {
             prob = rand.Next(100);
             Debug.Log("prob " + prob);
@@ -190,7 +196,11 @@ public class Game : MonoBehaviour
             }
         }
 
-        return Math.Min(num_alive, num_gas_masks);
+        num_saved = Math.Min(num_alive, num_gas_masks);
+
+        scoreboard.ShowSurvivorStats(survivor_ind, num_saved + " saved,\n" + (num_to_save - num_saved) + " deceased");
+
+        return num_saved;
 
     }
 
