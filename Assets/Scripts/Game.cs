@@ -56,7 +56,7 @@ public class Game : MonoBehaviour
         int counter = 0;
         foreach(Agent agent in agent_objects)
         {
-            Debug.Log("Agent " + counter + " has sib index " + agent.GetInd());
+            // Debug.Log("Agent " + counter + " has sib index " + agent.GetInd());
             agent.SetGame(this, survivor_objects);
             bids.Add(new BidList());
             counter++;
@@ -189,7 +189,7 @@ public class Game : MonoBehaviour
         for(int i = 0; i < num_to_save; i++)
         {
             prob = rand.Next(100);
-            Debug.Log("prob " + prob);
+            // Debug.Log("prob " + prob);
             if(prob < percent_chance_of_survival)
             {
                 num_alive += 1;

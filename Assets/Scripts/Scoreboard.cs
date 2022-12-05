@@ -33,6 +33,7 @@ public class Scoreboard : MonoBehaviour
 
     public void ShowSurvivorStats(int survivorNum, string survivorData)
     {
+        Debug.Log("Survivor Stats for " + survivorNum);
         textFields[survivorNum].text = survivorData;
     }
 }
