@@ -20,9 +20,7 @@ public class Scoreboard : MonoBehaviour
             Debug.Log("In Child " + i);
             var child = gameObject.transform.GetChild(i).GetChild(1);
             textFields[i] = child.transform.GetComponent<TMPro.TextMeshProUGUI>();
-            Debug.Log(textFields[i].text);
-            textFields[i].text = "?/? saved";
-            Debug.Log(textFields[i].text);
+            textFields[i].text = "Group " + i + "\n?/? saved";
         }
         
     }
