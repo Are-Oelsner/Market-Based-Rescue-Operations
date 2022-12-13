@@ -6,7 +6,7 @@ public class Survivors : MonoBehaviour
 {
     public float num_survivors;
     private float orig_num;
-    // Start is called before the first frame update
+    // Start is callgted before the first frame update
     void Start()
     {
         orig_num = num_survivors;
