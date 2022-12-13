@@ -17,7 +17,6 @@ public class Scoreboard : MonoBehaviour
         textFields = new TMPro.TextMeshProUGUI[numChildren];
         for (int i = 0; i < numChildren; i++)
         {
-            Debug.Log("In Child " + i);
             var child = gameObject.transform.GetChild(i).GetChild(1);
             textFields[i] = child.transform.GetComponent<TMPro.TextMeshProUGUI>();
             textFields[i].text = "Group " + i + "\n?/? saved";

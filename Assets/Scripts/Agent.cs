@@ -68,7 +68,7 @@ public class Agent : MonoBehaviour
         position_history[position_number++] = gameObject.transform.position; // Set initial position to agent's current position
 
 
-        InvokeRepeating("Path_Nav", 1.0f, .5f*STEP_COST);
+        InvokeRepeating("Path_Nav", 1.0f, .25f*STEP_COST);
     }
 
     public int GetInd()
@@ -137,7 +137,7 @@ public class Agent : MonoBehaviour
             transform.position = a_star_path[a_star_path.Count - current_timestep - 1];
             current_timestep++;
 
-            if(current_timestep == 1)
+            if(current_timestep == a_star_path.Count)
             {
                 Debug.Log("Agent " + GetInd() + " saved " + game.GetNumSaved(survivor_assigned_to, a_star_path.Count, num_gas_masks) + " people");
             }
@@ -236,7 +236,7 @@ public class Agent : MonoBehaviour
 
             frontier.RemoveAt(0);
 
-            if(Vector3.Distance(node.position, goal) < STEP_COST)
+            if(Vector3.Distance(node.position, goal) < STEP_COST * 0.5f)
             {
                 // if we have found the goal, return the path to it by iterating over the parents
                 //return node.cost;

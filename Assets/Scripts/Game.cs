@@ -38,9 +38,12 @@ public class Game : MonoBehaviour
     private List<BidList> bids = new List<BidList>(); // rows are agents, columns are survivors
     private bool bids_received = false;
 
-    public float soft_limit = 150.0f;
-    public float chance_per_step = 0.05f;
-    public float hard_limit = 180.0f;
+    public float soft_limit;
+    public float chance_per_step;
+    public float hard_limit;
+
+    private bool timer_started = false;
+    private int time_count = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -48,20 +51,25 @@ public class Game : MonoBehaviour
         // Initialize Agents
         InitAgents(create_agents);
 
-        scoreboard = GameObject.Find("Survivor Stats").GetComponent(typeof(Scoreboard)) as Scoreboard;
-
         // initialize lists for each agent except the last one (LineRenderers)
         agent_objects = GameObject.Find("Agents").GetComponentsInChildren<Agent>();
         survivor_objects = GameObject.Find("Survivors").GetComponentsInChildren<Survivors>();
         int counter = 0;
         foreach(Agent agent in agent_objects)
         {
-            // Debug.Log("Agent " + counter + " has sib index " + agent.GetInd());
             agent.SetGame(this, survivor_objects);
             bids.Add(new BidList());
             counter++;
         }
 
+        // initialize scoreboard
+        scoreboard = GameObject.Find("Survivor Stats").GetComponent(typeof(Scoreboard)) as Scoreboard;
+        for(int i = 0; i < survivor_objects.Length; i++)
+        {
+            scoreboard.ShowSurvivorStats(i, survivor_objects[i].num_survivors + " survivors");
+        }
+
+        // initialize obstacles
         GameObject obstacles_parent = GameObject.Find("Obstacles");
         int num_obstacles = obstacles_parent.transform.childCount;
         obstacles = new GameObject[num_obstacles];
@@ -70,12 +78,30 @@ public class Game : MonoBehaviour
             obstacles[i] = obstacles_parent.transform.GetChild(i).gameObject;
         }
 
-        //obstacles[0] = GameObject.Find("Obstacle 1");
-
         collision_checker = GameObject.Find("CollisionChecker");
 
-        //Run assign paths function
+        // set up periodic functions
         InvokeRepeating("AssignPaths", 0.0f, 1.0f);
+        InvokeRepeating("Timer", 0.0f, 0.25f);
+
+    }
+
+    public void Timer()
+    {
+        if(timer_started)
+        {
+            if(time_count == hard_limit)
+            {
+                for(int i = 0; i < survivor_objects.Length; i++)
+                {
+                    if(survivor_objects[i].GetNumSaved() == 0)
+                    {
+                        scoreboard.ShowSurvivorStats(i, "0 saved,\n" + survivor_objects[i].GetOrigSurvivors() + " deceased");
+                    }
+                }
+            }
+            time_count++;
+        }
     }
 
     private void InitAgents(bool _create_agents)
@@ -173,32 +199,36 @@ public class Game : MonoBehaviour
         // chance of death per survivor increases by 5% each step past the soft limit
         float num_overridden = path_length - soft_limit;
         int num_alive = 0;
+        int num_already_saved = survivor_objects[survivor_ind].GetNumSaved();
         int num_saved = 0;
-        int num_to_save = (int)survivor_objects[survivor_ind].GetOrigSurvivors();
+        int total_num_saved;
+        int num_to_save = (int)survivor_objects[survivor_ind].GetOrigSurvivors() - num_already_saved;
 
         if(path_length <= soft_limit)
         {
             num_alive = num_to_save;
-            return Math.Min(num_alive, num_gas_masks);
+            num_saved = Math.Min(num_alive, num_gas_masks);
         }
-
-        float percent_chance_of_survival = (1 - chance_per_step * num_overridden) * 100.0f;
-        int prob;
-        System.Random rand = new System.Random();
-
-        for(int i = 0; i < num_to_save; i++)
+        else
         {
-            prob = rand.Next(100);
-            // Debug.Log("prob " + prob);
-            if(prob < percent_chance_of_survival)
+            float percent_chance_of_survival = (1 - chance_per_step * num_overridden) * 100.0f;
+            int prob;
+            System.Random rand = new System.Random();
+
+            for(int i = 0; i < num_to_save; i++)
             {
-                num_alive += 1;
+                prob = rand.Next(100);
+                if(prob < percent_chance_of_survival)
+                {
+                    num_alive += 1;
+                }
             }
+
+            num_saved = Math.Min(num_alive, num_gas_masks);
         }
-
-        num_saved = Math.Min(num_alive, num_gas_masks);
-
-        scoreboard.ShowSurvivorStats(survivor_ind, num_saved + " saved,\n" + (num_to_save - num_saved) + " deceased");
+        total_num_saved = num_saved + num_already_saved;
+        survivor_objects[survivor_ind].SaveNum(num_saved);
+        scoreboard.ShowSurvivorStats(survivor_ind, total_num_saved + " saved,\n" + ((int)survivor_objects[survivor_ind].GetOrigSurvivors() - total_num_saved) + " deceased");
 
         return num_saved;
 
@@ -249,7 +279,7 @@ public class Game : MonoBehaviour
                 num_assigned++;
                 if(best_agent != -1 && best_num_saved > 0)
                 {
-                    //Debug.Log("Agent " + best_agent + " has " + agent_objects[best_agent].num_gas_masks + " masks and path length " + best_bid_path + " and can probably save " + best_num_saved + " people");
+                    Debug.Log("Agent " + best_agent + " has " + agent_objects[best_agent].num_gas_masks + " masks and path length " + best_bid_path + " and can probably save " + best_num_saved + " people");
 
 
                     // assign the best agent to that path
@@ -266,6 +296,7 @@ public class Game : MonoBehaviour
 
             // this method should only be run once
             bids_received = false;
+            timer_started = true;
         }
     }
 
