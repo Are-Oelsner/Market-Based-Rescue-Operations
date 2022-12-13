@@ -213,6 +213,10 @@ public class Agent : MonoBehaviour
     private List<Vector3> A_star(Vector3 start, Vector3 goal)
     {
         //List<Vector3> path = new List<Vector3>();
+        // Check if euclidean distance is within hard limit
+        if(Vector3.Distance(start, goal) > game.hard_limit) {
+            return null;
+        }
 
         // frontier is a sorted list with best candidate to expand first
         List<Node> frontier = new List<Node>();
